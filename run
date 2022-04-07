@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+while true; python pandemic.py; sleep 30; done
