@@ -53,6 +53,7 @@ def get_tweets_from_near_location(keywords, lat, lon, radius=25, start_time='202
 
 if __name__ == '__main__':
     KEYWORDS = 'cough OR fever'
+    STATE = "CA"
 
     db = sqlite3.connect('pandemic.db')
     cursor = db.cursor()
@@ -62,7 +63,7 @@ if __name__ == '__main__':
     seen = set([x[0] for x in cursor.fetchall()])
     
     count_fetched = 1
-    cursor.execute('SELECT id, lat, lng, county_ascii, state_id from county where state_id="GA" order by state_id, county_ascii')
+    cursor.execute('SELECT id, lat, lng, county_ascii, state_id from county where state_id=? order by state_id, county_ascii', (STATE,))
     for county_id, lat, lon, county_name, state in cursor.fetchall():
         if county_id not in seen:
             with yaspin(text=f'{count_fetched}. {county_name}, {state}') as spinner:

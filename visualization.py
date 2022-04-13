@@ -8,7 +8,13 @@ from scipy.signal import find_peaks_cwt
 import numpy as np
 
 db = sqlite3.connect('pandemic.db')
-df = pd.read_sql_query('SELECT tdate, sum(count) AS totals FROM tweet_count GROUP BY tdate', db)
+df = pd.read_sql_query('''
+    SELECT tdate, sum(count) AS totals 
+    FROM tweet_count 
+    LEFT JOIN county ON county_id = county.id
+    WHERE state_id="FL"
+    GROUP BY tdate
+''', db)
 
 x = pd.to_datetime(df['tdate'])
 y = df['totals'].to_numpy()
