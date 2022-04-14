@@ -5,6 +5,7 @@ import pandas as pd
 import datetime as datetime
 from smoothing import savitzky_golay
 from scipy.signal import find_peaks_cwt
+from scipy.signal import savgol_filter
 import numpy as np
 
 def create_plot(db, state_name, state_id):
@@ -14,11 +15,11 @@ def create_plot(db, state_name, state_id):
         LEFT JOIN county ON county_id = county.id
         WHERE state_id=?
         GROUP BY tdate
-    ''', db, params = ('FL',))
+    ''', db, params = (state_id,))
 
     x = pd.to_datetime(df['tdate'])
     y = df['totals'].to_numpy()
-    y_hat = savitzky_golay(y, 61, 3) # window size 51, polynomial order 3
+    y_hat = savgol_filter(y, 61, 3) # window size 51, polynomial order 3
     mean = np.average(y_hat)
     peaks = find_peaks_cwt(y_hat, 15)
     valid = [i for i in peaks if y_hat[i]> mean]
