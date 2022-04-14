@@ -3,7 +3,6 @@ import matplotlib.dates as mdates
 import sqlite3
 import pandas as pd
 import datetime as datetime
-from smoothing import savitzky_golay
 from scipy.signal import find_peaks_cwt
 from scipy.signal import savgol_filter
 import numpy as np
